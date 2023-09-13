@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bun todolist</title>
+    <link rel="stylesheet" href="https://cdn.simplecss.org/simple.min.css" />
+  </head>
+  <body>
+    <h1>Creando un todolist con Bun, simple.css y tsx</h1>
+    <form onsubmit="postTodo(event)">
+      <input type="text" name="todo" placeholder="Nueva tarea" />
+      <button type="submit">Nueva tarea</button>
+    </form>
+    <div id="todos"></div>
+    <script>
+      function getTodos() {
+        fetch("/todos")
+          .then((response) => response.text())
+          .then((todos) => {
+            document.getElementById("todos").innerHTML = todos;
+          });
+      }
+
+      getTodos();
+
+      function postTodo(e) {
+        e.preventDefault();
+        const todo = e.target.elements.todo.value;
+        fetch("/todos", { body: JSON.stringify({ todo }), method: "POST" })
+          .then((response) => response.text())
+          .then((todos) => {
+            e.target.elements.todo.value = "";
+            document.getElementById("todos").innerHTML = todos;
+          });
+      }
+    </script>
+  </body>
+</html>
